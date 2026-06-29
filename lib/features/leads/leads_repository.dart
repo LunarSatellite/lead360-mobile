@@ -34,4 +34,28 @@ class LeadsRepository {
   Future<void> updateStage(String id, LeadStage stage) async {
     await _api.dio.put('/v1/crm/leads/$id/stage', data: {'stage': stage.raw});
   }
+
+  /// POST /v1/crm/leads — manual create (CreateManualLeadRequest).
+  Future<Lead> create({
+    String? customerName,
+    String? customerEmail,
+    String? customerPhone,
+    LeadStage stage = LeadStage.newLead,
+    String? adSource,
+    String? notes,
+  }) async {
+    final res = await _api.dio.post('/v1/crm/leads', data: {
+      if (customerName != null && customerName.isNotEmpty) 'customerName': customerName,
+      if (customerEmail != null && customerEmail.isNotEmpty) 'customerEmail': customerEmail,
+      if (customerPhone != null && customerPhone.isNotEmpty) 'customerPhone': customerPhone,
+      'stage': stage.raw,
+      if (adSource != null && adSource.isNotEmpty) 'adSource': adSource,
+      if (notes != null && notes.isNotEmpty) 'notes': notes,
+    });
+    if ((res.statusCode == 200 || res.statusCode == 201) && res.data is Map) {
+      return Lead.fromJson(Map<String, dynamic>.from(res.data));
+    }
+    final msg = (res.data is Map ? (res.data['message'] ?? res.data['Message']) : null)?.toString();
+    throw Exception(msg ?? 'Failed to create lead');
+  }
 }

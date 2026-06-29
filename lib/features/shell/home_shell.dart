@@ -46,6 +46,14 @@ class _HomeShellState extends ConsumerState<HomeShell> {
           ),
         ],
       ),
+      floatingActionButton: _index == 0
+          ? FloatingActionButton(
+              onPressed: () => context.push('/leads/new'),
+              backgroundColor: AppColors.brand,
+              foregroundColor: AppColors.bg,
+              child: const Icon(Icons.add),
+            )
+          : null,
       body: IndexedStack(index: _index, children: pages),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,
