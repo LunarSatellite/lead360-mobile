@@ -35,6 +35,11 @@ class _HomeShellState extends ConsumerState<HomeShell> {
         title: Text(_titles[_index], style: const TextStyle(fontWeight: FontWeight.w800)),
         actions: [
           IconButton(
+            tooltip: 'Search',
+            icon: const Icon(Icons.search, color: AppColors.textSecondary),
+            onPressed: () => context.push('/search'),
+          ),
+          IconButton(
             tooltip: 'Copilot',
             icon: const Icon(Icons.auto_awesome, color: AppColors.brand),
             onPressed: () => context.push('/copilot'),

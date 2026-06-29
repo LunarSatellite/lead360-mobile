@@ -9,6 +9,7 @@ import '../../features/leads/lead_detail_screen.dart';
 import '../../features/contacts/contact_detail_screen.dart';
 import '../../features/deals/deal_detail_screen.dart';
 import '../../features/copilot/copilot_screen.dart';
+import '../../features/search/search_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -31,6 +32,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/contacts/:id', builder: (_, s) => ContactDetailScreen(contactId: s.pathParameters['id']!)),
       GoRoute(path: '/deals/:id', builder: (_, s) => DealDetailScreen(dealId: s.pathParameters['id']!)),
       GoRoute(path: '/copilot', builder: (_, __) => const CopilotScreen()),
+      GoRoute(path: '/search', builder: (_, __) => const SearchScreen()),
     ],
   );
 });
