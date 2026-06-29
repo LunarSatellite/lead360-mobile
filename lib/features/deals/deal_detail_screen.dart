@@ -5,6 +5,9 @@ import '../../core/theme/app_theme.dart';
 import '../../shared/money.dart';
 import '../../shared/widgets/async_view.dart';
 import '../../shared/widgets/detail_kit.dart';
+import '../../core/theme/app_theme.dart';
+import '../activity/activity_providers.dart';
+import '../activity/activity_timeline.dart';
 import 'deals_providers.dart';
 
 class DealDetailScreen extends ConsumerWidget {
@@ -31,6 +34,14 @@ class DealDetailScreen extends ConsumerWidget {
               DetailRow('Owner', d.ownedByUserName),
               DetailRow('Close date', d.closeDate == null ? null : DateFormat('MMM d, y').format(d.closeDate!.toLocal())),
             ]),
+            const SizedBox(height: 24),
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Text('ACTIVITY',
+                  style: TextStyle(color: AppColors.textMuted, fontSize: 10, fontWeight: FontWeight.w800, letterSpacing: 1.5)),
+            ),
+            const SizedBox(height: 12),
+            ActivityTimeline(kind: ActivityEntityKind.deal, id: d.id),
           ],
         ),
       ),

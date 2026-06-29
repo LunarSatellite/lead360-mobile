@@ -18,6 +18,9 @@ as the web app (`/api/v1/...`, JWT + `X-Tenant-Id`). No backend changes required
 3. **Wire the API base URL** for your environments via `--dart-define=API_BASE_URL=...` (and CI flavors).
 4. **Copilot** needs the tenant's `agentRuntimeEnabled` on (web Feature Settings) + a DeepSeek key server-side.
 5. **Push notifications:** follow `docs/PUSH-NOTIFICATIONS.md` (Firebase project + backend `DeviceToken` endpoint).
+6. **Deep links (`url_launcher`):** for tap-to-call/email/WhatsApp, after `flutter create .` add to
+   `android/app/src/main/AndroidManifest.xml` a `<queries>` block for `tel`, `mailto`, and `https`
+   schemes (Android 11+), and to iOS `Info.plist` `LSApplicationQueriesSchemes` = `tel`, `mailto`, `https`.
 
 ## Architecture
 Feature-first, mirroring the web's Feature-Sliced layout:

@@ -4,6 +4,9 @@ import 'package:intl/intl.dart';
 import '../../core/theme/app_theme.dart';
 import '../../shared/widgets/async_view.dart';
 import '../../shared/widgets/stage_pill.dart';
+import '../../shared/widgets/contact_actions.dart';
+import '../activity/activity_providers.dart';
+import '../activity/activity_timeline.dart';
 import 'lead_model.dart';
 import 'leads_providers.dart';
 
@@ -44,7 +47,9 @@ class LeadDetailScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
+            ContactActions(phone: l.customerPhone, email: l.customerEmail),
+            const SizedBox(height: 16),
             _Section('Contact', [
               _Row('Email', l.customerEmail),
               _Row('Phone', l.customerPhone),
@@ -64,6 +69,14 @@ class LeadDetailScreen extends ConsumerWidget {
               onPressed: () => _changeStage(context, ref, l),
               label: const Text('Change stage'),
             ),
+            const SizedBox(height: 24),
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Text('ACTIVITY',
+                  style: TextStyle(color: AppColors.textMuted, fontSize: 10, fontWeight: FontWeight.w800, letterSpacing: 1.5)),
+            ),
+            const SizedBox(height: 12),
+            ActivityTimeline(kind: ActivityEntityKind.lead, id: l.id),
           ],
         ),
       ),

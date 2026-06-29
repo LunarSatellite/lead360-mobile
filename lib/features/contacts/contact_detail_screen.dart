@@ -4,6 +4,10 @@ import 'package:intl/intl.dart';
 import '../../core/theme/app_theme.dart';
 import '../../shared/widgets/async_view.dart';
 import '../../shared/widgets/detail_kit.dart';
+import '../../shared/widgets/contact_actions.dart';
+import '../../core/theme/app_theme.dart';
+import '../activity/activity_providers.dart';
+import '../activity/activity_timeline.dart';
 import 'contacts_providers.dart';
 
 class ContactDetailScreen extends ConsumerWidget {
@@ -22,13 +26,23 @@ class ContactDetailScreen extends ConsumerWidget {
           padding: const EdgeInsets.all(16),
           children: [
             DetailHeader(initial: c.fullName.isNotEmpty ? c.fullName[0] : '?', title: c.fullName, subtitle: c.jobTitle),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
+            ContactActions(phone: c.phone, email: c.email),
+            const SizedBox(height: 16),
             DetailSection('Contact', [
               DetailRow('Email', c.email),
               DetailRow('Phone', c.phone),
               DetailRow('Job title', c.jobTitle),
               DetailRow('Created', c.createdAt == null ? null : DateFormat('MMM d, y').format(c.createdAt!.toLocal())),
             ]),
+            const SizedBox(height: 24),
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Text('ACTIVITY',
+                  style: TextStyle(color: AppColors.textMuted, fontSize: 10, fontWeight: FontWeight.w800, letterSpacing: 1.5)),
+            ),
+            const SizedBox(height: 12),
+            ActivityTimeline(kind: ActivityEntityKind.contact, id: c.id),
           ],
         ),
       ),
