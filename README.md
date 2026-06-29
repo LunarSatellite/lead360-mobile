@@ -3,12 +3,21 @@
 Flutter (iOS + Android) companion for the Lead360 CRM. Talks to the same backend API
 as the web app (`/api/v1/...`, JWT + `X-Tenant-Id`). No backend changes required.
 
-## Status (v1 scaffold)
+## Status (v1)
 - ✅ Auth (login, secure token storage, refresh-on-401, auth-aware routing)
 - ✅ Dark-green "Bato" theme matching the web identity
-- ✅ Leads: list (search + stage filter, pull-to-refresh), detail, change-stage
-- ✅ Tab shell (Leads live; Contacts / Deals / Tasks / More stubbed)
-- ⏳ Next: Contacts, Deals, Tasks verticals (mirror Leads), push notifications, CRM Copilot (SSE)
+- ✅ Leads / Contacts / Deals / Tasks — list (search/filter, pull-to-refresh) + detail; lead stage-change; task complete
+- ✅ CRM Copilot — streaming agent chat over SSE (`/v1/agent-runtime/message/stream`) with confirmations
+- ✅ Global search — leads + contacts + deals, grouped
+- ⏳ Next: push notifications (see `docs/PUSH-NOTIFICATIONS.md` — needs Firebase + a small backend addition), offline cache, list pagination
+
+## Handoff — to take this live
+1. **Create the remote** (`lead360-mobile`) and push; this repo currently has no remote.
+2. **Verify the build:** `flutter create .` then `flutter pub get` then `flutter analyze` + `flutter run`.
+   The Dart was written without a local SDK (analyzer not run here) — fix anything `flutter analyze` flags.
+3. **Wire the API base URL** for your environments via `--dart-define=API_BASE_URL=...` (and CI flavors).
+4. **Copilot** needs the tenant's `agentRuntimeEnabled` on (web Feature Settings) + a DeepSeek key server-side.
+5. **Push notifications:** follow `docs/PUSH-NOTIFICATIONS.md` (Firebase project + backend `DeviceToken` endpoint).
 
 ## Architecture
 Feature-first, mirroring the web's Feature-Sliced layout:
