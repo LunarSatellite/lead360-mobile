@@ -1,0 +1,24 @@
+# Flutter / Dart
+.dart_tool/
+.packages
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+pubspec.lock
+*.iml
+
+# IDE
+.idea/
+.vscode/
+
+# Env / secrets
+.env
+**/google-services.json
+**/GoogleService-Info.plist
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Generated platform folders (run `flutter create .` to regenerate)
+# (kept out until the team runs flutter create to attach android/ ios/)
