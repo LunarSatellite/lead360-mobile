@@ -23,6 +23,14 @@ class AppColors {
   static const warning = Color(0xFFF59E0B);
   static const danger = Color(0xFFF43F5E);
   static const info = Color(0xFF60A5FA);
+  static const violet = Color(0xFFA78BFA);
+
+  /// Signature accent gradient (logos, CTAs, hero) — matches the web's 135° brand gradient.
+  static const brandGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFF00FFAA), Color(0xFF00B368)],
+  );
 }
 
 ThemeData buildAppTheme() {

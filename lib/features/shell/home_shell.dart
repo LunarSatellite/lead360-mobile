@@ -3,12 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/providers.dart';
 import '../../core/theme/app_theme.dart';
+import '../dashboard/dashboard_screen.dart';
 import '../leads/leads_list_screen.dart';
 import '../contacts/contacts_list_screen.dart';
 import '../deals/deals_list_screen.dart';
 import '../tasks/tasks_list_screen.dart';
 
-/// Bottom-tab shell: Leads (live), Contacts/Deals/Tasks (stubs), More.
+/// Bottom-tab shell: Home (dashboard), Leads, Contacts, Deals, Tasks.
+/// Sign-out lives in the app-bar profile menu; Search + Copilot are app-bar actions.
 class HomeShell extends ConsumerStatefulWidget {
   const HomeShell({super.key});
   @override
@@ -17,19 +19,18 @@ class HomeShell extends ConsumerStatefulWidget {
 
 class _HomeShellState extends ConsumerState<HomeShell> {
   int _index = 0;
+  static const _titles = ['Home', 'Leads', 'Contacts', 'Deals', 'Tasks'];
 
-  static const _titles = ['Leads', 'Contacts', 'Deals', 'Tasks', 'More'];
+  static const _pages = [
+    DashboardScreen(),
+    LeadsListScreen(),
+    ContactsListScreen(),
+    DealsListScreen(),
+    TasksListScreen(),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    final pages = [
-      const LeadsListScreen(),
-      const ContactsListScreen(),
-      const DealsListScreen(),
-      const TasksListScreen(),
-      _MoreTab(),
-    ];
-
     return Scaffold(
       appBar: AppBar(
         title: Text(_titles[_index], style: const TextStyle(fontWeight: FontWeight.w800)),
@@ -44,9 +45,11 @@ class _HomeShellState extends ConsumerState<HomeShell> {
             icon: const Icon(Icons.auto_awesome, color: AppColors.brand),
             onPressed: () => context.push('/copilot'),
           ),
+          _ProfileMenu(),
+          const SizedBox(width: 4),
         ],
       ),
-      floatingActionButton: _index == 0
+      floatingActionButton: _index == 1
           ? FloatingActionButton(
               onPressed: () => context.push('/leads/new'),
               backgroundColor: AppColors.brand,
@@ -54,39 +57,46 @@ class _HomeShellState extends ConsumerState<HomeShell> {
               child: const Icon(Icons.add),
             )
           : null,
-      body: IndexedStack(index: _index, children: pages),
+      body: IndexedStack(index: _index, children: _pages),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,
         onDestinationSelected: (i) => setState(() => _index = i),
         destinations: const [
+          NavigationDestination(icon: Icon(Icons.dashboard_outlined), selectedIcon: Icon(Icons.dashboard), label: 'Home'),
           NavigationDestination(icon: Icon(Icons.people_alt_outlined), selectedIcon: Icon(Icons.people_alt), label: 'Leads'),
           NavigationDestination(icon: Icon(Icons.contacts_outlined), selectedIcon: Icon(Icons.contacts), label: 'Contacts'),
           NavigationDestination(icon: Icon(Icons.handshake_outlined), selectedIcon: Icon(Icons.handshake), label: 'Deals'),
           NavigationDestination(icon: Icon(Icons.check_circle_outline), selectedIcon: Icon(Icons.check_circle), label: 'Tasks'),
-          NavigationDestination(icon: Icon(Icons.more_horiz), label: 'More'),
         ],
       ),
     );
   }
 }
 
-class _MoreTab extends ConsumerWidget {
+class _ProfileMenu extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final auth = ref.watch(authControllerProvider);
     final name = auth is AuthAuthenticated ? auth.user.displayName : '';
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
+    return PopupMenuButton<String>(
+      icon: const Icon(Icons.account_circle_outlined, color: AppColors.textSecondary),
+      color: AppColors.bgCard,
+      onSelected: (v) {
+        if (v == 'logout') ref.read(authControllerProvider.notifier).logout();
+      },
+      itemBuilder: (_) => [
         if (name.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: Text('Signed in as $name', style: const TextStyle(color: AppColors.textMuted)),
+          PopupMenuItem<String>(
+            enabled: false,
+            child: Text(name, style: const TextStyle(color: AppColors.textMuted, fontSize: 12)),
           ),
-        ListTile(
-          leading: const Icon(Icons.logout, color: AppColors.danger),
-          title: const Text('Sign out', style: TextStyle(color: AppColors.textPrimary)),
-          onTap: () => ref.read(authControllerProvider.notifier).logout(),
+        const PopupMenuItem<String>(
+          value: 'logout',
+          child: Row(children: [
+            Icon(Icons.logout, color: AppColors.danger, size: 18),
+            SizedBox(width: 10),
+            Text('Sign out', style: TextStyle(color: AppColors.textPrimary)),
+          ]),
         ),
       ],
     );
