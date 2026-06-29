@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/providers.dart';
 import '../../core/theme/app_theme.dart';
 import '../leads/leads_list_screen.dart';
-import 'placeholder_screen.dart';
+import '../contacts/contacts_list_screen.dart';
+import '../deals/deals_list_screen.dart';
+import '../tasks/tasks_list_screen.dart';
 
 /// Bottom-tab shell: Leads (live), Contacts/Deals/Tasks (stubs), More.
 class HomeShell extends ConsumerStatefulWidget {
@@ -21,9 +23,9 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   Widget build(BuildContext context) {
     final pages = [
       const LeadsListScreen(),
-      const PlaceholderScreen(title: 'Contacts', icon: Icons.contacts_outlined),
-      const PlaceholderScreen(title: 'Deals', icon: Icons.handshake_outlined),
-      const PlaceholderScreen(title: 'Tasks', icon: Icons.check_circle_outline),
+      const ContactsListScreen(),
+      const DealsListScreen(),
+      const TasksListScreen(),
       _MoreTab(),
     ];
 
