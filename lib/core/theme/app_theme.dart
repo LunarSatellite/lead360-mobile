@@ -49,6 +49,11 @@ ThemeData buildAppTheme() {
     scaffoldBackgroundColor: AppColors.bg,
     colorScheme: scheme,
     fontFamily: 'Inter',
+    // Smooth, modern push/pop transitions across platforms (go_router MaterialPage uses these).
+    pageTransitionsTheme: const PageTransitionsTheme(builders: {
+      TargetPlatform.android: ZoomPageTransitionsBuilder(),
+      TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+    }),
     appBarTheme: const AppBarTheme(
       backgroundColor: AppColors.bg,
       elevation: 0,

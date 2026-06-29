@@ -38,6 +38,7 @@ class _ContactsListScreenState extends ConsumerState<ContactsListScreen> {
           child: PagedListView<Contact>(
             state: contacts,
             emptyText: 'No contacts found',
+            emptyIcon: Icons.contacts_outlined,
             onRefresh: () => ref.read(contactsPagedProvider.notifier).refresh(),
             onLoadMore: () => ref.read(contactsPagedProvider.notifier).loadMore(),
             itemBuilder: (_, c) => _ContactCard(c),

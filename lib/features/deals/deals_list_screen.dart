@@ -39,6 +39,7 @@ class _DealsListScreenState extends ConsumerState<DealsListScreen> {
           child: PagedListView<Deal>(
             state: deals,
             emptyText: 'No deals found',
+            emptyIcon: Icons.handshake_outlined,
             onRefresh: () => ref.read(dealsPagedProvider.notifier).refresh(),
             onLoadMore: () => ref.read(dealsPagedProvider.notifier).loadMore(),
             itemBuilder: (_, d) => _DealCard(d),

@@ -78,6 +78,7 @@ class _LeadsListScreenState extends ConsumerState<LeadsListScreen> {
           child: PagedListView<Lead>(
             state: leads,
             emptyText: 'No leads found',
+            emptyIcon: Icons.people_alt_outlined,
             onRefresh: () => ref.read(leadsPagedProvider.notifier).refresh(),
             onLoadMore: () => ref.read(leadsPagedProvider.notifier).loadMore(),
             itemBuilder: (_, lead) => _LeadCard(lead),

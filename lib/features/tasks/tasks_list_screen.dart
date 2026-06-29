@@ -45,6 +45,7 @@ class TasksListScreen extends ConsumerWidget {
           child: PagedListView<CrmTask>(
             state: tasks,
             emptyText: 'No tasks',
+            emptyIcon: Icons.check_circle_outline,
             onRefresh: () => ref.read(tasksPagedProvider.notifier).refresh(),
             onLoadMore: () => ref.read(tasksPagedProvider.notifier).loadMore(),
             itemBuilder: (_, t) => _TaskCard(t),

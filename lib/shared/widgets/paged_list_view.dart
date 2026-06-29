@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/app_theme.dart';
 import '../paged_list.dart';
+import 'empty_state.dart';
+import 'fade_in.dart';
 import 'skeleton.dart';
 
 /// Infinite-scroll list bound to a [PagedState]: pull-to-refresh, skeleton on
@@ -13,6 +15,7 @@ class PagedListView<T> extends StatefulWidget {
     required this.onLoadMore,
     required this.onRefresh,
     this.emptyText = 'Nothing here yet',
+    this.emptyIcon = Icons.inbox_outlined,
   });
 
   final PagedState<T> state;
@@ -20,6 +23,7 @@ class PagedListView<T> extends StatefulWidget {
   final Future<void> Function() onLoadMore;
   final Future<void> Function() onRefresh;
   final String emptyText;
+  final IconData emptyIcon;
 
   @override
   State<PagedListView<T>> createState() => _PagedListViewState<T>();
@@ -54,14 +58,12 @@ class _PagedListViewState<T> extends State<PagedListView<T>> {
     if (s.initialLoading) return const SkeletonList();
 
     if (s.error != null && s.items.isEmpty) {
-      return Center(
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
-          const Icon(Icons.cloud_off, color: AppColors.textMuted, size: 34),
-          const SizedBox(height: 10),
-          const Text('Something went wrong.', style: TextStyle(color: AppColors.textMuted)),
-          const SizedBox(height: 14),
-          FilledButton(onPressed: widget.onRefresh, child: const Text('Retry')),
-        ]),
+      return EmptyState(
+        icon: Icons.cloud_off,
+        title: 'Something went wrong',
+        subtitle: 'Pull to refresh or try again.',
+        actionLabel: 'Retry',
+        onAction: widget.onRefresh,
       );
     }
 
@@ -70,10 +72,8 @@ class _PagedListViewState<T> extends State<PagedListView<T>> {
       onRefresh: widget.onRefresh,
       child: s.items.isEmpty
           ? ListView(children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 80),
-                child: Center(child: Text(widget.emptyText, style: const TextStyle(color: AppColors.textMuted))),
-              ),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.5,
+                  child: EmptyState(icon: widget.emptyIcon, title: widget.emptyText)),
             ])
           : ListView.separated(
               controller: _ctrl,
@@ -87,7 +87,9 @@ class _PagedListViewState<T> extends State<PagedListView<T>> {
                     child: Center(child: SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.brand))),
                   );
                 }
-                return widget.itemBuilder(context, s.items[i]);
+                // Entrance animation only for the first screenful — avoids re-animating on every scroll.
+                final card = widget.itemBuilder(context, s.items[i]);
+                return i < 8 ? FadeInSlide(child: card) : card;
               },
             ),
     );
