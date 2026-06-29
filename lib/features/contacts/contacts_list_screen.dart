@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../shared/widgets/async_view.dart';
+import '../../shared/widgets/skeleton.dart';
 import 'contact_model.dart';
 import 'contacts_providers.dart';
 
@@ -41,6 +42,7 @@ class _ContactsListScreenState extends ConsumerState<ContactsListScreen> {
             child: AsyncView(
               value: contacts,
               onRetry: () => ref.invalidate(contactsListProvider),
+              loading: const SkeletonList(),
               data: (paged) => paged.items.isEmpty
                   ? ListView(children: const [Padding(padding: EdgeInsets.only(top: 80), child: Center(child: Text('No contacts found', style: TextStyle(color: AppColors.textMuted))))])
                   : ListView.separated(

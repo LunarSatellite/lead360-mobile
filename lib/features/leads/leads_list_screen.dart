@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../shared/widgets/async_view.dart';
+import '../../shared/widgets/skeleton.dart';
 import '../../shared/widgets/stage_pill.dart';
 import 'lead_model.dart';
 import 'leads_providers.dart';
@@ -81,6 +82,7 @@ class _LeadsListScreenState extends ConsumerState<LeadsListScreen> {
             child: AsyncView(
               value: leads,
               onRetry: () => ref.invalidate(leadsListProvider),
+              loading: const SkeletonList(),
               data: (paged) {
                 if (paged.items.isEmpty) {
                   return ListView(children: const [

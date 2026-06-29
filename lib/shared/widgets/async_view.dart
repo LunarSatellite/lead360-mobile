@@ -5,17 +5,19 @@ import '../../core/theme/app_theme.dart';
 /// Renders loading / error (with retry) / data states for an AsyncValue,
 /// so screens don't repeat the boilerplate (the mobile analog of the web DataView).
 class AsyncView<T> extends StatelessWidget {
-  const AsyncView({super.key, required this.value, required this.data, this.onRetry, this.emptyText});
+  const AsyncView({super.key, required this.value, required this.data, this.onRetry, this.emptyText, this.loading});
 
   final AsyncValue<T> value;
   final Widget Function(T data) data;
   final VoidCallback? onRetry;
   final String? emptyText;
+  /// Optional custom loading widget (e.g. a SkeletonList) — defaults to a centered spinner.
+  final Widget? loading;
 
   @override
   Widget build(BuildContext context) {
     return value.when(
-      loading: () => const Center(child: Padding(
+      loading: () => loading ?? const Center(child: Padding(
         padding: EdgeInsets.all(40),
         child: CircularProgressIndicator(color: AppColors.brand),
       )),

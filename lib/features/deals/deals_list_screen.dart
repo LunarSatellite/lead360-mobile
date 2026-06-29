@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../shared/money.dart';
 import '../../shared/widgets/async_view.dart';
+import '../../shared/widgets/skeleton.dart';
 import 'deal_model.dart';
 import 'deals_providers.dart';
 
@@ -42,6 +43,7 @@ class _DealsListScreenState extends ConsumerState<DealsListScreen> {
             child: AsyncView(
               value: deals,
               onRetry: () => ref.invalidate(dealsListProvider),
+              loading: const SkeletonList(),
               data: (paged) => paged.items.isEmpty
                   ? ListView(children: const [Padding(padding: EdgeInsets.only(top: 80), child: Center(child: Text('No deals found', style: TextStyle(color: AppColors.textMuted))))])
                   : ListView.separated(

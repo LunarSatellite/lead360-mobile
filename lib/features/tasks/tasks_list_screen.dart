@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../core/theme/app_theme.dart';
 import '../../shared/widgets/async_view.dart';
+import '../../shared/widgets/skeleton.dart';
 import 'task_model.dart';
 import 'tasks_providers.dart';
 
@@ -48,6 +49,7 @@ class TasksListScreen extends ConsumerWidget {
             child: AsyncView(
               value: tasks,
               onRetry: () => ref.invalidate(tasksListProvider),
+              loading: const SkeletonList(),
               data: (paged) => paged.items.isEmpty
                   ? ListView(children: const [Padding(padding: EdgeInsets.only(top: 80), child: Center(child: Text('No tasks', style: TextStyle(color: AppColors.textMuted))))])
                   : ListView.separated(
