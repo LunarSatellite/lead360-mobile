@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/network/api_client.dart';
 import '../../core/network/json.dart';
 import '../../core/providers.dart';
+import '../../shared/paged_list.dart';
 import 'task_model.dart';
 
 class TasksRepository {
@@ -38,10 +39,19 @@ class TasksRepository {
 
 final tasksRepositoryProvider = Provider<TasksRepository>((ref) => TasksRepository(ref.read(apiClientProvider)));
 
-/// null = all; otherwise filter. Default to open tasks (todo) for the rep view.
+/// null = all; otherwise filter.
 final tasksStatusProvider = StateProvider<TaskStatus?>((ref) => null);
 
-final tasksListProvider = FutureProvider.autoDispose<Paged<CrmTask>>((ref) async {
-  final status = ref.watch(tasksStatusProvider);
-  return ref.read(tasksRepositoryProvider).list(status: status);
-});
+class TasksPaged extends PagedListNotifier<CrmTask> {
+  @override
+  PagedState<CrmTask> build() {
+    ref.watch(tasksStatusProvider);
+    return super.build();
+  }
+
+  @override
+  Future<Paged<CrmTask>> fetch(int page, int pageSize) =>
+      ref.read(tasksRepositoryProvider).list(page: page, pageSize: pageSize, status: ref.read(tasksStatusProvider));
+}
+
+final tasksPagedProvider = AutoDisposeNotifierProvider<TasksPaged, PagedState<CrmTask>>(TasksPaged.new);

@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
-import '../../shared/widgets/async_view.dart';
-import '../../shared/widgets/skeleton.dart';
+import '../../shared/widgets/paged_list_view.dart';
 import '../../shared/widgets/stage_pill.dart';
 import 'lead_model.dart';
 import 'leads_providers.dart';
@@ -30,7 +29,7 @@ class _LeadsListScreenState extends ConsumerState<LeadsListScreen> {
   @override
   Widget build(BuildContext context) {
     final filter = ref.watch(leadsFilterProvider);
-    final leads = ref.watch(leadsListProvider);
+    final leads = ref.watch(leadsPagedProvider);
 
     return Column(
       children: [
@@ -76,30 +75,12 @@ class _LeadsListScreenState extends ConsumerState<LeadsListScreen> {
         ),
         const SizedBox(height: 8),
         Expanded(
-          child: RefreshIndicator(
-            color: AppColors.brand,
-            onRefresh: () async => ref.invalidate(leadsListProvider),
-            child: AsyncView(
-              value: leads,
-              onRetry: () => ref.invalidate(leadsListProvider),
-              loading: const SkeletonList(),
-              data: (paged) {
-                if (paged.items.isEmpty) {
-                  return ListView(children: const [
-                    Padding(
-                      padding: EdgeInsets.only(top: 80),
-                      child: Center(child: Text('No leads found', style: TextStyle(color: AppColors.textMuted))),
-                    ),
-                  ]);
-                }
-                return ListView.separated(
-                  padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
-                  itemCount: paged.items.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 8),
-                  itemBuilder: (_, i) => _LeadCard(paged.items[i]),
-                );
-              },
-            ),
+          child: PagedListView<Lead>(
+            state: leads,
+            emptyText: 'No leads found',
+            onRefresh: () => ref.read(leadsPagedProvider.notifier).refresh(),
+            onLoadMore: () => ref.read(leadsPagedProvider.notifier).loadMore(),
+            itemBuilder: (_, lead) => _LeadCard(lead),
           ),
         ),
       ],

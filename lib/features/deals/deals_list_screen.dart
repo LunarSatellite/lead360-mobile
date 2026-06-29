@@ -3,8 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
 import '../../shared/money.dart';
-import '../../shared/widgets/async_view.dart';
-import '../../shared/widgets/skeleton.dart';
+import '../../shared/widgets/paged_list_view.dart';
 import 'deal_model.dart';
 import 'deals_providers.dart';
 
@@ -21,7 +20,7 @@ class _DealsListScreenState extends ConsumerState<DealsListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final deals = ref.watch(dealsListProvider);
+    final deals = ref.watch(dealsPagedProvider);
     return Column(
       children: [
         Padding(
@@ -37,22 +36,12 @@ class _DealsListScreenState extends ConsumerState<DealsListScreen> {
           ),
         ),
         Expanded(
-          child: RefreshIndicator(
-            color: AppColors.brand,
-            onRefresh: () async => ref.invalidate(dealsListProvider),
-            child: AsyncView(
-              value: deals,
-              onRetry: () => ref.invalidate(dealsListProvider),
-              loading: const SkeletonList(),
-              data: (paged) => paged.items.isEmpty
-                  ? ListView(children: const [Padding(padding: EdgeInsets.only(top: 80), child: Center(child: Text('No deals found', style: TextStyle(color: AppColors.textMuted))))])
-                  : ListView.separated(
-                      padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
-                      itemCount: paged.items.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: 8),
-                      itemBuilder: (_, i) => _DealCard(paged.items[i]),
-                    ),
-            ),
+          child: PagedListView<Deal>(
+            state: deals,
+            emptyText: 'No deals found',
+            onRefresh: () => ref.read(dealsPagedProvider.notifier).refresh(),
+            onLoadMore: () => ref.read(dealsPagedProvider.notifier).loadMore(),
+            itemBuilder: (_, d) => _DealCard(d),
           ),
         ),
       ],

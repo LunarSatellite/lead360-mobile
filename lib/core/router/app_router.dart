@@ -8,7 +8,9 @@ import '../../features/shell/home_shell.dart';
 import '../../features/leads/lead_detail_screen.dart';
 import '../../features/leads/lead_create_screen.dart';
 import '../../features/contacts/contact_detail_screen.dart';
+import '../../features/contacts/contact_create_screen.dart';
 import '../../features/deals/deal_detail_screen.dart';
+import '../../features/deals/deal_create_screen.dart';
 import '../../features/copilot/copilot_screen.dart';
 import '../../features/search/search_screen.dart';
 
@@ -31,7 +33,9 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/home', builder: (_, __) => const HomeShell()),
       GoRoute(path: '/leads/new', builder: (_, __) => const LeadCreateScreen()),
       GoRoute(path: '/leads/:id', builder: (_, s) => LeadDetailScreen(leadId: s.pathParameters['id']!)),
+      GoRoute(path: '/contacts/new', builder: (_, __) => const ContactCreateScreen()),
       GoRoute(path: '/contacts/:id', builder: (_, s) => ContactDetailScreen(contactId: s.pathParameters['id']!)),
+      GoRoute(path: '/deals/new', builder: (_, __) => const DealCreateScreen()),
       GoRoute(path: '/deals/:id', builder: (_, s) => DealDetailScreen(dealId: s.pathParameters['id']!)),
       GoRoute(path: '/copilot', builder: (_, __) => const CopilotScreen()),
       GoRoute(path: '/search', builder: (_, __) => const SearchScreen()),

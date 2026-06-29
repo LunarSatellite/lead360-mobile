@@ -43,7 +43,7 @@ class _LeadCreateScreenState extends ConsumerState<LeadCreateScreen> {
             adSource: _source.text.trim(),
             notes: _notes.text.trim(),
           );
-      ref.invalidate(leadsListProvider);
+      ref.read(leadsPagedProvider.notifier).refresh();
       if (mounted) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Lead created')));

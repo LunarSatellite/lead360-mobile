@@ -21,6 +21,14 @@ class _HomeShellState extends ConsumerState<HomeShell> {
   int _index = 0;
   static const _titles = ['Home', 'Leads', 'Contacts', 'Deals', 'Tasks'];
 
+  /// FAB target per tab (Leads/Contacts/Deals create); null = no FAB.
+  String? get _fabRoute => switch (_index) {
+        1 => '/leads/new',
+        2 => '/contacts/new',
+        3 => '/deals/new',
+        _ => null,
+      };
+
   static const _pages = [
     DashboardScreen(),
     LeadsListScreen(),
@@ -49,14 +57,14 @@ class _HomeShellState extends ConsumerState<HomeShell> {
           const SizedBox(width: 4),
         ],
       ),
-      floatingActionButton: _index == 1
-          ? FloatingActionButton(
-              onPressed: () => context.push('/leads/new'),
+      floatingActionButton: _fabRoute == null
+          ? null
+          : FloatingActionButton(
+              onPressed: () => context.push(_fabRoute!),
               backgroundColor: AppColors.brand,
               foregroundColor: AppColors.bg,
               child: const Icon(Icons.add),
-            )
-          : null,
+            ),
       body: IndexedStack(index: _index, children: _pages),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,

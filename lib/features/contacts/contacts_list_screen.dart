@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../core/theme/app_theme.dart';
-import '../../shared/widgets/async_view.dart';
-import '../../shared/widgets/skeleton.dart';
+import '../../shared/widgets/paged_list_view.dart';
 import 'contact_model.dart';
 import 'contacts_providers.dart';
 
@@ -20,7 +19,7 @@ class _ContactsListScreenState extends ConsumerState<ContactsListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final contacts = ref.watch(contactsListProvider);
+    final contacts = ref.watch(contactsPagedProvider);
     return Column(
       children: [
         Padding(
@@ -36,22 +35,12 @@ class _ContactsListScreenState extends ConsumerState<ContactsListScreen> {
           ),
         ),
         Expanded(
-          child: RefreshIndicator(
-            color: AppColors.brand,
-            onRefresh: () async => ref.invalidate(contactsListProvider),
-            child: AsyncView(
-              value: contacts,
-              onRetry: () => ref.invalidate(contactsListProvider),
-              loading: const SkeletonList(),
-              data: (paged) => paged.items.isEmpty
-                  ? ListView(children: const [Padding(padding: EdgeInsets.only(top: 80), child: Center(child: Text('No contacts found', style: TextStyle(color: AppColors.textMuted))))])
-                  : ListView.separated(
-                      padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
-                      itemCount: paged.items.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: 8),
-                      itemBuilder: (_, i) => _ContactCard(paged.items[i]),
-                    ),
-            ),
+          child: PagedListView<Contact>(
+            state: contacts,
+            emptyText: 'No contacts found',
+            onRefresh: () => ref.read(contactsPagedProvider.notifier).refresh(),
+            onLoadMore: () => ref.read(contactsPagedProvider.notifier).loadMore(),
+            itemBuilder: (_, c) => _ContactCard(c),
           ),
         ),
       ],

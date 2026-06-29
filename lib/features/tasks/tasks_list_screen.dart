@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../core/theme/app_theme.dart';
-import '../../shared/widgets/async_view.dart';
-import '../../shared/widgets/skeleton.dart';
+import '../../shared/widgets/paged_list_view.dart';
 import 'task_model.dart';
 import 'tasks_providers.dart';
 
@@ -15,7 +14,7 @@ class TasksListScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final status = ref.watch(tasksStatusProvider);
-    final tasks = ref.watch(tasksListProvider);
+    final tasks = ref.watch(tasksPagedProvider);
     return Column(
       children: [
         SizedBox(
@@ -43,22 +42,12 @@ class TasksListScreen extends ConsumerWidget {
         ),
         const SizedBox(height: 8),
         Expanded(
-          child: RefreshIndicator(
-            color: AppColors.brand,
-            onRefresh: () async => ref.invalidate(tasksListProvider),
-            child: AsyncView(
-              value: tasks,
-              onRetry: () => ref.invalidate(tasksListProvider),
-              loading: const SkeletonList(),
-              data: (paged) => paged.items.isEmpty
-                  ? ListView(children: const [Padding(padding: EdgeInsets.only(top: 80), child: Center(child: Text('No tasks', style: TextStyle(color: AppColors.textMuted))))])
-                  : ListView.separated(
-                      padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
-                      itemCount: paged.items.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: 8),
-                      itemBuilder: (_, i) => _TaskCard(paged.items[i]),
-                    ),
-            ),
+          child: PagedListView<CrmTask>(
+            state: tasks,
+            emptyText: 'No tasks',
+            onRefresh: () => ref.read(tasksPagedProvider.notifier).refresh(),
+            onLoadMore: () => ref.read(tasksPagedProvider.notifier).loadMore(),
+            itemBuilder: (_, t) => _TaskCard(t),
           ),
         ),
       ],
@@ -135,7 +124,7 @@ class _TaskCard extends ConsumerWidget {
   Future<void> _complete(BuildContext context, WidgetRef ref) async {
     try {
       await ref.read(tasksRepositoryProvider).complete(t.id);
-      ref.invalidate(tasksListProvider);
+      ref.read(tasksPagedProvider.notifier).refresh();
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Task completed')));
       }

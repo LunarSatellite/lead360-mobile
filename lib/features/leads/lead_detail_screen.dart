@@ -107,7 +107,7 @@ class LeadDetailScreen extends ConsumerWidget {
     try {
       await ref.read(leadsRepositoryProvider).updateStage(l.id, picked);
       ref.invalidate(leadDetailProvider(l.id));
-      ref.invalidate(leadsListProvider);
+      ref.read(leadsPagedProvider.notifier).refresh();
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Moved to ${picked.label}')));
       }

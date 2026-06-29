@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/network/json.dart';
 import '../../core/providers.dart';
+import '../../shared/paged_list.dart';
 import 'lead_model.dart';
 import 'leads_repository.dart';
 
@@ -17,11 +18,22 @@ class LeadsFilter {
 
 final leadsFilterProvider = StateProvider<LeadsFilter>((ref) => const LeadsFilter());
 
-/// First page of leads for the active filter. (Pagination/infinite-scroll = follow-up.)
-final leadsListProvider = FutureProvider.autoDispose<Paged<Lead>>((ref) async {
-  final filter = ref.watch(leadsFilterProvider);
-  return ref.read(leadsRepositoryProvider).list(search: filter.search, stage: filter.stage);
-});
+/// Infinite-scroll leads list for the active filter.
+class LeadsPaged extends PagedListNotifier<Lead> {
+  @override
+  PagedState<Lead> build() {
+    ref.watch(leadsFilterProvider); // reset + reload when the filter changes
+    return super.build();
+  }
+
+  @override
+  Future<Paged<Lead>> fetch(int page, int pageSize) {
+    final f = ref.read(leadsFilterProvider);
+    return ref.read(leadsRepositoryProvider).list(page: page, pageSize: pageSize, search: f.search, stage: f.stage);
+  }
+}
+
+final leadsPagedProvider = AutoDisposeNotifierProvider<LeadsPaged, PagedState<Lead>>(LeadsPaged.new);
 
 final leadDetailProvider = FutureProvider.autoDispose.family<Lead, String>((ref, id) async {
   return ref.read(leadsRepositoryProvider).getById(id);
