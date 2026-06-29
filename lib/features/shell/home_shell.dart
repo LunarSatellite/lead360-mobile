@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../core/providers.dart';
 import '../../core/theme/app_theme.dart';
 import '../leads/leads_list_screen.dart';
@@ -36,9 +37,7 @@ class _HomeShellState extends ConsumerState<HomeShell> {
           IconButton(
             tooltip: 'Copilot',
             icon: const Icon(Icons.auto_awesome, color: AppColors.brand),
-            onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('CRM Copilot — wiring the /agent-runtime stream next.')),
-            ),
+            onPressed: () => context.push('/copilot'),
           ),
         ],
       ),
