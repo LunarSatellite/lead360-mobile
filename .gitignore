@@ -2,6 +2,7 @@
 .dart_tool/
 .packages
 build/
+*.apk
 .flutter-plugins
 .flutter-plugins-dependencies
 pubspec.lock
@@ -22,3 +23,6 @@ Thumbs.db
 
 # Generated platform folders (run `flutter create .` to regenerate)
 # (kept out until the team runs flutter create to attach android/ ios/)
+android/
+ios/
+.metadata

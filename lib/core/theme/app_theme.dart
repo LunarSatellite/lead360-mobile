@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// Dark-green "Bato" identity mirrored from the web app (gold-on-green).
@@ -60,7 +61,7 @@ ThemeData buildAppTheme() {
       foregroundColor: AppColors.textPrimary,
       centerTitle: false,
     ),
-    cardTheme: CardTheme(
+    cardTheme: CardThemeData(
       color: AppColors.glass1,
       elevation: 0,
       shape: RoundedRectangleBorder(

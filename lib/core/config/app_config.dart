@@ -4,7 +4,7 @@
 class AppConfig {
   static const String apiBaseUrl = String.fromEnvironment(
     'API_BASE_URL',
-    defaultValue: 'http://10.0.2.2:5000/api', // Android emulator → host localhost:5000
+    defaultValue: 'https://lead360.voyageritnepal.com/api', // production backend ({base}/v1/...)
   );
 
   /// Secure-storage keys for the JWT pair + active tenant.

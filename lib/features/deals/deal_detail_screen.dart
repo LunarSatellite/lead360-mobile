@@ -6,6 +6,7 @@ import '../../shared/money.dart';
 import '../../shared/widgets/async_view.dart';
 import '../../shared/widgets/detail_kit.dart';
 import '../../core/theme/app_theme.dart';
+import 'deal_model.dart';
 import '../activity/activity_providers.dart';
 import '../activity/activity_timeline.dart';
 import 'deals_providers.dart';
