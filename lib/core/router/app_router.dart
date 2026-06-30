@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../providers.dart';
-import '../theme/app_theme.dart';
 import '../../features/auth/login_screen.dart';
 import '../../features/shell/home_shell.dart';
+import '../../features/shell/splash_screen.dart';
 import '../../features/leads/lead_detail_screen.dart';
 import '../../features/leads/lead_create_screen.dart';
 import '../../features/contacts/contact_detail_screen.dart';
@@ -28,7 +28,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       return null;
     },
     routes: [
-      GoRoute(path: '/', builder: (_, __) => const _Splash()),
+      GoRoute(path: '/', builder: (_, __) => const SplashScreen()),
       GoRoute(path: '/login', builder: (_, __) => const LoginScreen()),
       GoRoute(path: '/home', builder: (_, __) => const HomeShell()),
       GoRoute(path: '/leads/new', builder: (_, __) => const LeadCreateScreen()),
@@ -42,13 +42,6 @@ final routerProvider = Provider<GoRouter>((ref) {
     ],
   );
 });
-
-class _Splash extends StatelessWidget {
-  const _Splash();
-  @override
-  Widget build(BuildContext context) =>
-      const Scaffold(body: Center(child: CircularProgressIndicator(color: AppColors.brand)));
-}
 
 /// Bridges the Riverpod auth state into go_router's refreshListenable so the
 /// redirect re-runs whenever auth changes (login/logout/session-lost).
