@@ -93,8 +93,8 @@ class _Body extends StatelessWidget {
           crossAxisSpacing: 12,
           childAspectRatio: 1.45,
           children: [
-            StatCard(label: 'Total leads', value: '${l.total}', icon: Icons.people_alt, accent: AppColors.brand),
-            StatCard(label: 'Hot leads', value: '${l.hotCount}', icon: Icons.local_fire_department, accent: AppColors.danger),
+            StatCard(label: 'Total leads', count: l.total, icon: Icons.people_alt, accent: AppColors.brand),
+            StatCard(label: 'Hot leads', count: l.hotCount, icon: Icons.local_fire_department, accent: AppColors.danger),
             StatCard(label: 'Pipeline value', value: money(deals.totalPipelineValue, 'USD'), icon: Icons.trending_up, accent: AppColors.info),
             StatCard(label: 'Win rate', value: '${deals.winRate.toStringAsFixed(0)}%', icon: Icons.emoji_events, accent: AppColors.success),
           ],

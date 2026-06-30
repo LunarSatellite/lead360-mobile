@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/app_theme.dart';
+import '../../shared/widgets/animated_count.dart';
+
+const _valueStyle = TextStyle(color: AppColors.textPrimary, fontSize: 24, fontWeight: FontWeight.w900, height: 1);
 
 /// KPI tile: icon chip + big value + label, with a tinted accent.
+/// Pass [count] for an integer KPI (animated count-up) or [value] for a formatted string.
 class StatCard extends StatelessWidget {
-  const StatCard({super.key, required this.label, required this.value, required this.icon, required this.accent, this.onTap});
+  const StatCard({super.key, required this.label, required this.icon, required this.accent, this.value, this.count, this.onTap})
+      : assert(value != null || count != null, 'StatCard needs value or count');
   final String label;
-  final String value;
+  final String? value;
+  final int? count;
   final IconData icon;
   final Color accent;
   final VoidCallback? onTap;
@@ -31,7 +37,10 @@ class StatCard extends StatelessWidget {
               child: Icon(icon, color: accent, size: 18),
             ),
             const SizedBox(height: 12),
-            Text(value, style: const TextStyle(color: AppColors.textPrimary, fontSize: 24, fontWeight: FontWeight.w900, height: 1)),
+            if (count != null)
+              AnimatedCount(count!, style: _valueStyle)
+            else
+              Text(value!, style: _valueStyle),
             const SizedBox(height: 4),
             Text(label, style: const TextStyle(color: AppColors.textMuted, fontSize: 12)),
           ],
